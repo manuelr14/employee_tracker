@@ -148,6 +148,37 @@ function addEmployee() {
                         choices: ["Yes", "No"]
                     }
                 ]).then(function (response) {
+                    if (response.manager === "yes") {
+                     connection.query("SELECT first_name, last_name FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
+                        (err, results) => {
+                           if (err) throw err;
+                            console.log(results);
+                        inquirer
+                            .prompt([
+                                {
+                                    name: "managers",
+                                    message: "who is the manager?",
+                                    type: "rawlist",
+                                    choices: function () {
+                                         return results.map(item => {
+                                            return item.first_name;
+                                        });
+                                    },
+                                }
+
+
+
+                        inquirer
+                        .prompt([
+                            {
+                                name: "name",
+                                type:"input",
+                                message: "what is the employee name?"
+                            },
+
+
+                    }
+
                     connection.query("SELECT position, year, song FROM Top5000 WHERE ?",
                         {
                             artist: response.artist
