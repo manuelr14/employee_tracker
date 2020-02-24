@@ -77,7 +77,7 @@ function allEmployees() {
             results.forEach(element => {
 
                 console.log('employeerID:' + element.employee_id + ' || name: ' + element.first_name + ' || last name: ' + element.last_name + ' || Role: ' + element.tittle + ' || Salary: ' + element.salary)
-
+                runSearch();
             });
 
         }
