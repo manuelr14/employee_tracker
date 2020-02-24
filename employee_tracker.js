@@ -60,7 +60,7 @@ function runSearch() {
         case "Update employee role":
           updateRole();
           break;
-            
+
         case "Update employee manager":
           updateManager();
           break;
@@ -70,85 +70,16 @@ function runSearch() {
 
 function allEmployees() {
 
-      connection.query("SELECT employeer_id, first_name, last_name, role.tittle, role.salary FROM employee JOIN role ON employee.role_id = role.role_id",
-         (err, results) => {
-          if (err) throw err;
-        
-          results.forEach(element => {
+  connection.query("SELECT employee_id, first_name, last_name, role.tittle, role.salary FROM employee JOIN role ON employee.role_id = role.role_id",
+    (err, results) => {
+      if (err) throw err;
 
-            console.log( 'employeerID:' + element.employeer_id + ' || name: ' + element.first_name ' || last name: ' + element.last_name ' || Role: ' element.tittle + ' || Salary: ' + element.salary)
-        
-          });
-          
-        }
-      )
-     })
+      results.forEach(element => {
+
+        console.log('employeerID:' + element.employee_id + ' || name: ' + element.first_name + ' || last name: ' + element.last_name + ' || Role: ' + element.tittle + ' || Salary: ' + element.salary)
+
+      });
+
+    }
+  )
 };
-
-function allEmployees() {
-    inquirer
-      .prompt([
-        {
-          name: "name",
-          message: "what is the employee name?"
-        }
-        {
-            name: "lastname",
-            message: "what is the employee last name?",
-        }
-        {
-            name: "role",
-            message:" what is the employee role?"
-            type: "list",
-            choices: rolePicker()
-        }
-        {
-            name: "manager"
-            message: "Does the employee has a manager?",
-            type:"list", 
-            choices: ["Yes","No"]
-        }
-      ]).then(function (response) {
-        connection.query("SELECT position, year, song FROM Top5000 WHERE ?",
-          {
-            artist: response.artist
-  
-          }, (err, results) => {
-            if (err) throw err;
-          
-            results.forEach(element => {
-  
-              console.log( 'position: ${element.position} || year: ${ element.year }|| song: ${ element.song} ')
-              ${element.position}
-            });
-            
-          }
-        )
-       })
-  };
-
-
-
-
-function multiSearch() {
-  inquirer
-    .prompt([
-      {
-        name: "artist",
-        message: "What artist would you like to search?"
-      }
-    ]).then(function (response) {
-      var query = connection.query("SELECT * FROM Top5000 WHERE ?",
-        {
-          artist: response.artist
-
-        }, (err, results) => {
-          if (err) throw err;
-
-
-          console.log(results);
-        }
-      )
-    })
-};
-

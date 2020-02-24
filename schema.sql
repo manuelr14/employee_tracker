@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS employee_trackerDB;
+ DROP DATABASE IF EXISTS employee_trackerDB;
 
 CREATE DATABASE employee_trackerDB;
 
@@ -28,8 +28,6 @@ last_name varchar (30),
 role_id INT,
 manager_id INT NULL,
 PRIMARY KEY(employee_id),
-FOREIGN KEY (employee_id) REFERENCES role (role_id),
+FOREIGN KEY (role_id) REFERENCES role (role_id),
 FOREIGN KEY (manager_id) REFERENCES employee (employee_id)
 );
-
-
