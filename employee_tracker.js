@@ -50,7 +50,7 @@ function runSearch() {
                     break;
 
                 case "View all employees by Manager":
-                    allEmployees_byManag();
+                    allEmployees_byManager();
                     break;
 
                 case "Add employee":
@@ -83,3 +83,86 @@ function allEmployees() {
         }
     )
 };
+
+function rolePicker() {
+
+    connection.query("SELECT name FROM department",
+        (err, results) => {
+            if (err) throw err;
+            console.log(results);
+
+            // results.forEach(element => {
+            inquirer
+                .prompt([
+                    {
+                        name: "roleoptions",
+                        type: "rawlist",
+                        choices: function () {
+                            return results.map(item => {
+                                return item.item_name;
+                            });
+                        },
+                         message: "what is the employee role?"
+                   
+                    }
+            
+          
+                ])
+
+
+        });
+    };
+
+function addEmployee() {
+    connection.query("SELECT name FROM department",
+    (err, results) => {
+        if (err) throw err;
+        console.log(results);
+
+            inquirer
+                .prompt([
+                    {
+                        name: "name",
+                        type:"input",
+                        message: "what is the employee name?"
+                    },
+                    {
+                        name: "lastname",
+                        type:"input",
+                        message: "what is the employee last name?",
+                    },
+                    {
+                        name: "role",
+                        message: "what is the employee role?",
+                        type: "rawlist",
+                        choices: function () {
+                             return results.map(item => {
+                                return item.name;
+                            });
+                        },
+                    },
+                    {
+                        name: "manager",
+                        message: "Does the employee has a manager?",
+                        type: "list",
+                        choices: ["Yes", "No"]
+                    }
+                ]).then(function (response) {
+                    connection.query("SELECT position, year, song FROM Top5000 WHERE ?",
+                        {
+                            artist: response.artist
+
+                        }, (err, results) => {
+                            if (err) throw err;
+
+                            results.forEach(element => {
+
+                                // console.log( 'position: ${element.position} || year: ${ element.year }|| song: ${ element.song} ')
+                                // ${ element.position }
+                            });
+
+                        }
+                    )
+                });
+        });
+    };
