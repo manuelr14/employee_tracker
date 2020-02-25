@@ -133,7 +133,7 @@ function addEmployee() {
 
 
                     if (response.manager === "Yes") {
-                        connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
+                        connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE employee_id IN (SELECT manager_id from employee",
                             (err, resultsmanager) => {
                                 if (err) throw err;
                                 console.log(resultsmanager);
