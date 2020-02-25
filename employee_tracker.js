@@ -148,8 +148,22 @@ function addEmployee() {
                         choices: ["Yes", "No"]
                     }
                 ]).then(function (response) {
+                    var name = response.name;
+                    var lastname = response.lastname;
+                    console.log(response);
+                    connection.query("INSERT INTO employee (first_name, last_name) VALUES (?)",
+                        {
+                            name,
+                            lastname
+
+                        }, (err, results) => {
+                            if (err) throw err;
+                            console.log(results);
+                        });
+
+
                     if (response.manager === "Yes") {
-                        connection.query("SELECT first_name, last_name FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
+                        connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
                             (err, resultsmanager) => {
                                 if (err) throw err;
                                 console.log(resultsmanager);
@@ -165,15 +179,66 @@ function addEmployee() {
                                                 });
                                             },
                                         }
-                                     ])
-                            
+                                    ])
+                                connection.query("UPDATE employee SET ? WHERE ?",
+                                    {
+                                        role_id: resultsmanager.role_id,
+                                        manager_id: resultsmanager.employee_id
+
+                                    },
+                                    {
+                                        first_name: response.name,
+                                        last_name: response.lastname
+                                    }, (err, results) => {
+                                        if (err) throw err;
+                                        console.log(results);
+                                    });
                             });
-                    }else {
+                    } else {
                         console.log("let's do it again");
                         runSearch();
-                    }
-        }
-    )
-});
-        
-    };
+                    };
+
+                    //   runSearch();
+
+
+
+                }
+                )
+        });
+
+};
+
+function allEmployees_byDep() {
+    connection.query("SELECT name from department",
+        (err, results) => {
+            if (err) throw err;
+            console.log(results);
+            inquirer
+                .prompt([
+                    {
+                        name: "department",
+                        message: "which department's employee would you like to see?",
+                        type: "rawlist",
+                        choices: function () {
+                            return results.map(item => {
+                                return item.name;
+                            });
+                        },
+                    },
+                ]).then(function (response) {
+                    connection.query("SELECT first_name, last_name from employee JOIN department ON ?",
+                        {
+                            name: response.department
+                        }, (err, results) => {
+                            if (err) throw err;
+                            results.forEach(element => {
+                            console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
+                         });
+                    });
+                
+               });
+        }                
+)};
+
+
