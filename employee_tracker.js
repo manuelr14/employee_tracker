@@ -102,33 +102,33 @@ function rolePicker() {
                                 return item.item_name;
                             });
                         },
-                         message: "what is the employee role?"
-                   
+                        message: "what is the employee role?"
+
                     }
-            
-          
+
+
                 ])
 
 
         });
-    };
+};
 
 function addEmployee() {
     connection.query("SELECT name FROM department",
-    (err, results) => {
-        if (err) throw err;
-        console.log(results);
+        (err, results) => {
+            if (err) throw err;
+            console.log(results);
 
             inquirer
                 .prompt([
                     {
                         name: "name",
-                        type:"input",
+                        type: "input",
                         message: "what is the employee name?"
                     },
                     {
                         name: "lastname",
-                        type:"input",
+                        type: "input",
                         message: "what is the employee last name?",
                     },
                     {
@@ -136,7 +136,7 @@ function addEmployee() {
                         message: "what is the employee role?",
                         type: "rawlist",
                         choices: function () {
-                             return results.map(item => {
+                            return results.map(item => {
                                 return item.name;
                             });
                         },
@@ -148,52 +148,32 @@ function addEmployee() {
                         choices: ["Yes", "No"]
                     }
                 ]).then(function (response) {
-                    if (response.manager === "yes") {
-                     connection.query("SELECT first_name, last_name FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
-                        (err, results) => {
-                           if (err) throw err;
-                            console.log(results);
-                        inquirer
-                            .prompt([
-                                {
-                                    name: "managers",
-                                    message: "who is the manager?",
-                                    type: "rawlist",
-                                    choices: function () {
-                                         return results.map(item => {
-                                            return item.first_name;
-                                        });
-                                    },
-                                }
-
-
-
-                        inquirer
-                        .prompt([
-                            {
-                                name: "name",
-                                type:"input",
-                                message: "what is the employee name?"
-                            },
-
-
-                    }
-
-                    connection.query("SELECT position, year, song FROM Top5000 WHERE ?",
-                        {
-                            artist: response.artist
-
-                        }, (err, results) => {
-                            if (err) throw err;
-
-                            results.forEach(element => {
-
-                                // console.log( 'position: ${element.position} || year: ${ element.year }|| song: ${ element.song} ')
-                                // ${ element.position }
+                    if (response.manager === "Yes") {
+                        connection.query("SELECT first_name, last_name FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
+                            (err, resultsmanager) => {
+                                if (err) throw err;
+                                console.log(resultsmanager);
+                                inquirer
+                                    .prompt([
+                                        {
+                                            name: "managers",
+                                            message: "who is the manager?",
+                                            type: "rawlist",
+                                            choices: function () {
+                                                return resultsmanager.map(item => {
+                                                    return item.first_name;
+                                                });
+                                            },
+                                        }
+                                     ])
+                            
                             });
-
-                        }
-                    )
-                });
-        });
+                    }else {
+                        console.log("let's do it again");
+                        runSearch();
+                    }
+        }
+    )
+});
+        
     };
