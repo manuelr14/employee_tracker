@@ -301,10 +301,6 @@ function  allEmployees_byManager(){
 
                     console.log("role updated");
 
-                    // results.forEach(element => {
-                    //     console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
-                        
-                    //  });
                      runSearch();
                     });
                 
