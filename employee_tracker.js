@@ -269,7 +269,6 @@ function  allEmployees_byManager(){
                         return item.tittle;
                     });
                 },
-                },
                 {
                     name: "newsalary",
                     message:"what is the employee's new salary?",
