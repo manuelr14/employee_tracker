@@ -123,8 +123,7 @@ function addEmployee() {
                         choices: ["Yes", "No"]
                     }
                 ]).then(function (response) {
-                    // var name = response.name;
-                    // var lastname = response.lastname;
+
                     console.log(response);
                     connection.query("INSERT INTO employee (first_name, last_name) VALUES ${response.name}, ${response.lastname}",
                          (err, results) => {
