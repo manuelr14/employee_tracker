@@ -343,6 +343,50 @@ function deleteEmployee(){
      }                
 )};
 
+function updateManager(){
+    connection.query("SELECT first_name, last_name, employee_id FROM employee",
+    (err, results) => {
+        if (err) throw err;
+        console.log(results);
+        inquirer
+            .prompt([
+                {
+                    name: "employeetoupdate",
+                    message: "which employee would you like to update the manager?",
+                    type: "rawlist",
+                    choices: function () {
+                        return results.map(item => {
+                            return item.employee_id + " " + item.first_name+ " " + item.last_name;
+                        });
+                    },
+                },
+                {
+                    name: "managerupdate",
+                    message: "who is going to be the employee manager?",
+                    type: "rawlist",
+                    choices: function () {
+                        return results.map(item => {
+                            return item.employee_id + " " + item.first_name+ " " + item.last_name;
+                        });
+                    },
+                },
+            ]).then(function (response) {
+                connection.query("UPDATE employee SET ? WHERE ?",
+                {
+                    manager_id:response.managerupdate[0],
+                    employee_id:response.employeetoupdate[0]
+
+                },
+                (err, results) => {
+                    if (err) throw err;
+                    console.log("employee deleted"); 
+                });
+                runSearch();
+            });
+     }                
+)};
+
+
 
 
  
