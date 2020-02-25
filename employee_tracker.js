@@ -4,10 +4,10 @@ const inquirer = require("inquirer");
 const connection = mysql.createConnection({
     host: "localhost",
 
-   
+
     port: 3306,
 
- 
+
     user: "root",
 
     password: "18877MSca",
@@ -80,7 +80,7 @@ function allEmployees() {
             results.forEach(element => {
 
                 console.log('employeerID:' + element.employee_id + ' || name: ' + element.first_name + ' || last name: ' + element.last_name + ' || Role: ' + element.tittle + ' || Salary: ' + element.salary)
-                
+
             });
             runSearch();
         }
@@ -126,9 +126,9 @@ function addEmployee() {
 
                     console.log(response);
                     connection.query("INSERT INTO employee (first_name, last_name) VALUES ${response.name}, ${response.lastname}",
-                         (err, results) => {
+                        (err, results) => {
                             if (err) throw err;
-               
+
                         });
 
 
@@ -152,7 +152,7 @@ function addEmployee() {
                                     ]).then(response)
                                 connection.query("UPDATE employee SET ? WHERE ?",
                                     {
-                                        first_name:response.managers
+                                        first_name: response.managers
 
                                     },
                                     {
@@ -196,187 +196,192 @@ function allEmployees_byDep() {
                         }, (err, results) => {
                             if (err) throw err;
                             results.forEach(element => {
-                            console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
-                            
-                         });
-                         runSearch();
-                    });
-                
-               });
-        }                
-)};
+                                console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
 
-function  allEmployees_byManager(){
+                            });
+                            runSearch();
+                        });
+
+                });
+        }
+    )
+};
+
+function allEmployees_byManager() {
     connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
-    (err, results) => {
-        if (err) throw err;
-        console.log(results);
-        inquirer
-            .prompt([
-                {
-                    name: "manager",
-                    message: "which manager's employee would you like to see?",
-                    type: "rawlist",
-                    choices: function () {
-                        return results.map(item => {
-                            return "Id " + item.employee_id + " " +item.first_name+ " " + item.last_name;
-                        });
+        (err, results) => {
+            if (err) throw err;
+            console.log(results);
+            inquirer
+                .prompt([
+                    {
+                        name: "manager",
+                        message: "which manager's employee would you like to see?",
+                        type: "rawlist",
+                        choices: function () {
+                            return results.map(item => {
+                                return "Id " + item.employee_id + " " + item.first_name + " " + item.last_name;
+                            });
+                        },
                     },
-                },    
-             
-            ]).then(function (response) {
-                connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE ?",
-                {
-              
-                manager_id: response.manager[3]
 
-                },(err, results) => {
-                    if (err) throw err;
-                    results.forEach(element => {
-                        console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
-                        
-                     });
-                     runSearch();
-                    });
-                
+                ]).then(function (response) {
+                    connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE ?",
+                        {
+
+                            manager_id: response.manager[3]
+
+                        }, (err, results) => {
+                            if (err) throw err;
+                            results.forEach(element => {
+                                console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
+
+                            });
+                            runSearch();
+                        });
+
                 });
-         }                
- )};
+        }
+    )
+};
 
- function updateRole(){
+function updateRole() {
     connection.query("SELECT first_name, last_name, employee_id, employee.role_id, role.tittle, role.salary  FROM employee JOIN role ON employee.role_id = role.role_id",
-    (err, results) => {
-        if (err) throw err;
-        console.log(results);
-        inquirer
-            .prompt([
-                {
-                    name: "employee",
-                    message: "which employee's role would you like to modify?",
-                    type: "rawlist",
-                    choices: function () {
-                        return results.map(item => {
-                            return item.employee_id + " " + item.first_name + " " + item.last_name+ " " + item.tittle;
-                        });
+        (err, results) => {
+            if (err) throw err;
+            console.log(results);
+            inquirer
+                .prompt([
+                    {
+                        name: "employee",
+                        message: "which employee's role would you like to modify?",
+                        type: "rawlist",
+                        choices: function () {
+                            return results.map(item => {
+                                return item.employee_id + " " + item.first_name + " " + item.last_name + " " + item.tittle;
+                            });
+                        },
                     },
-                },  
-                 {
-                    name: "newtittle",
-                    message:"what role this this employee does now?",
-                    type:"rawlist",
-                    choices: function () {
-                    return results.map(item => {
-                        return item.tittle;
-                    });
-                },
+                    {
+                        name: "newtittle",
+                        message: "what role this this employee does now?",
+                        type: "rawlist",
+                        choices: function () {
+                            return results.map(item => {
+                                return item.tittle;
+                            });
+                        },
                 {
-                    name: "newsalary",
-                    message:"what is the employee's new salary?",
-                    type:"input"
+                        name: "newsalary",
+                        message: "what is the employee's new salary?",
+                        type: "input"
 
-                }  
-    
-            ]).then(function (response) {
-                console.log(response.employee);
-                console.log(response.newtittle);
-                connection.query("UPDATE role SET ? WHERE ? ",
-                {
-                tittle:response.newtittle,
-                salary:response.newsalary,
-                
-               role_id:response.employee[0]
+                    }
 
-                },(err, results) => {
-                    if (err) throw err;
+                ]).then(function (response) {
+                    console.log(response.employee);
+                    console.log(response.newtittle);
+                    connection.query("UPDATE role SET ? WHERE ? ",
+                        {
+                            tittle: response.newtittle,
+                            salary: response.newsalary,
 
-                    console.log("role updated");
+                            role_id: response.employee[0]
 
-                     runSearch();
-                    });
-                
+                        }, (err, results) => {
+                            if (err) throw err;
+
+                            console.log("role updated");
+
+                            runSearch();
+                        });
+
                 });
-         }                
- )};
+        }
+    )
+};
 
-function deleteEmployee(){
+function deleteEmployee() {
     connection.query("SELECT first_name, last_name, employee_id FROM employee",
-    (err, results) => {
-        if (err) throw err;
-        console.log(results);
-        inquirer
-            .prompt([
-                {
-                    name: "employeeselected",
-                    message: "which employee would you like to delete?",
-                    type: "rawlist",
-                    choices: function () {
-                        return results.map(item => {
-                            return item.employee_id + " " + item.first_name+ " " + item.lastname;
-                        });
+        (err, results) => {
+            if (err) throw err;
+            console.log(results);
+            inquirer
+                .prompt([
+                    {
+                        name: "employeeselected",
+                        message: "which employee would you like to delete?",
+                        type: "rawlist",
+                        choices: function () {
+                            return results.map(item => {
+                                return item.employee_id + " " + item.first_name + " " + item.lastname;
+                            });
+                        },
                     },
-                },
-            ]).then(function (response) {
-                connection.query("DELETE FROM employee WHERE ?",
-                {
-                    employee_id:response.employeeselected[0]
-                },
-                (err, results) => {
-                    if (err) throw err;
-                    console.log("employee deleted"); 
-                });
-                runSearch();
-            });
-     }                
-)};
-
-function updateManager(){
-    connection.query("SELECT first_name, last_name, employee_id FROM employee",
-    (err, results) => {
-        if (err) throw err;
-        console.log(results);
-        inquirer
-            .prompt([
-                {
-                    name: "employeetoupdate",
-                    message: "which employee would you like to update the manager?",
-                    type: "rawlist",
-                    choices: function () {
-                        return results.map(item => {
-                            return item.employee_id + " " + item.first_name+ " " + item.last_name;
+                ]).then(function (response) {
+                    connection.query("DELETE FROM employee WHERE ?",
+                        {
+                            employee_id: response.employeeselected[0]
+                        },
+                        (err, results) => {
+                            if (err) throw err;
+                            console.log("employee deleted");
                         });
-                    },
-                },
-                {
-                    name: "managerupdate",
-                    message: "who is going to be the employee's manager?",
-                    type: "rawlist",
-                    choices: function () {
-                        return results.map(item => {
-                            return item.employee_id + " " + item.first_name+ " " + item.last_name;
-                        });
-                    },
-                },
-            ]).then(function (response) {
-                connection.query("UPDATE employee SET ? WHERE ?",
-                {
-                    manager_id:response.managerupdate[0],
-                    employee_id:response.employeetoupdate[0]
-
-                },
-                (err, results) => {
-                    if (err) throw err;
-                    console.log("employee deleted"); 
                     runSearch();
                 });
-               
-            });
-         }                
-)};
+        }
+    )
+};
+
+function updateManager() {
+    connection.query("SELECT first_name, last_name, employee_id FROM employee",
+        (err, results) => {
+            if (err) throw err;
+            console.log(results);
+            inquirer
+                .prompt([
+                    {
+                        name: "employeetoupdate",
+                        message: "which employee would you like to update the manager?",
+                        type: "rawlist",
+                        choices: function () {
+                            return results.map(item => {
+                                return item.employee_id + " " + item.first_name + " " + item.last_name;
+                            });
+                        },
+                    },
+                    {
+                        name: "managerupdate",
+                        message: "who is going to be the employee's manager?",
+                        type: "rawlist",
+                        choices: function () {
+                            return results.map(item => {
+                                return item.employee_id + " " + item.first_name + " " + item.last_name;
+                            });
+                        },
+                    },
+                ]).then(function (response) {
+                    connection.query("UPDATE employee SET ? WHERE ?",
+                        {
+                            manager_id: response.managerupdate[0],
+                            employee_id: response.employeetoupdate[0]
+
+                        },
+                        (err, results) => {
+                            if (err) throw err;
+                            console.log("employee deleted");
+                            runSearch();
+                        });
+
+                });
+        }
+    )
+};
 
 
 
 
- 
+
 
 
 
