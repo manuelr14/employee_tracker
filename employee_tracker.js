@@ -228,14 +228,14 @@ function  allEmployees_byManager(){
                     type: "rawlist",
                     choices: function () {
                         return results.map(item => {
-                            return item.employee_id;
+                            return "Id " + item.employee_id + " " +item.first_name+ " " + item.lastname;
                         });
                     },
                 },
             ]).then(function (response) {
                 connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE ?",
                 {
-                manager_id: response.manager
+                manager_id: response.manager[3]
 
                 },(err, results) => {
                     if (err) throw err;
