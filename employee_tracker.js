@@ -228,7 +228,7 @@ function  allEmployees_byManager(){
                     type: "rawlist",
                     choices: function () {
                         return results.map(item => {
-                            return "Id " + item.employee_id + " " +item.first_name+ " " + item.lastname;
+                            return "Id " + item.employee_id + " " +item.first_name+ " " + item.last_name;
                         });
                     },
                 },    
