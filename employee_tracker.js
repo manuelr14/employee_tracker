@@ -252,7 +252,7 @@ function  allEmployees_byManager(){
  )};
 
  function updateRole(){
-    connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee",
+    connection.query("SELECT first_name, last_name, employee_id, employee.role_id, role.tittle, role.salary  FROM employee JOIN role ON employee.role_id = role.role_id",
     (err, results) => {
         if (err) throw err;
         console.log(results);
@@ -260,32 +260,50 @@ function  allEmployees_byManager(){
             .prompt([
                 {
                     name: "employee",
-                    message: "which role's employee would you like to modify?",
+                    message: "which employee's role would you like to modify?",
                     type: "rawlist",
                     choices: function () {
                         return results.map(item => {
-                            return "Role Id " + item.role_id + " " +item.first_name+ " " + item.last_name;
+                            return item.employee_id + " " + item.first_name + " " + item.last_name+ " " + item.tittle;
                         });
                     },
                 },  
                  {
-                    name: "role",
-                    message:"what role does the employee has?",
-                    type:"input"
-                }
-            ]).then(function (response) {
-                connection.query("UPDATE role SET ? JOIN employee ON ? ",
+                    name: "newtittle",
+                    message:"what role this this employee does now?",
+                    type:"rawlist",
+                    choices: function () {
+                    return results.map(item => {
+                        return item.tittle;
+                    });
+                },
+                },
                 {
-                tittle:response.role,
-               
-               role_id:response.employee[8]
+                    name: "newsalary",
+                    message:"what is the employee's new salary?",
+                    type:"input"
+
+                }  
+    
+            ]).then(function (response) {
+                console.log(response.employee);
+                console.log(response.newtittle);
+                connection.query("UPDATE role SET ? WHERE ? ",
+                {
+                tittle:response.newtittle,
+                salary:response.newsalary,
+                
+               role_id:response.employee[0]
 
                 },(err, results) => {
                     if (err) throw err;
-                    results.forEach(element => {
-                        console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
+
+                    console.log("role updated");
+
+                    // results.forEach(element => {
+                    //     console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
                         
-                     });
+                    //  });
                      runSearch();
                     });
                 
