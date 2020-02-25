@@ -167,15 +167,9 @@ function addEmployee() {
                         console.log("let's do it again");
                         runSearch();
                     };
-
-                    
-
-
-
                 }
                 )
         });
-
 };
 
 function allEmployees_byDep() {
