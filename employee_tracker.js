@@ -150,12 +150,11 @@ function addEmployee() {
                                                     return item.first_name;
                                                 });
                                             },
-                                        }
-                                    ])
+                                        },
+                                    ]).then(response)
                                 connection.query("UPDATE employee SET ? WHERE ?",
                                     {
-                                        role_id: resultsmanager.role_id,
-                                        manager_id: resultsmanager.employee_id
+                                        first_name:response.managers
 
                                     },
                                     {
@@ -231,10 +230,12 @@ function  allEmployees_byManager(){
                             return "Id " + item.employee_id + " " +item.first_name+ " " + item.lastname;
                         });
                     },
-                },
+                },    
+             
             ]).then(function (response) {
                 connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE ?",
                 {
+              
                 manager_id: response.manager[3]
 
                 },(err, results) => {
@@ -249,6 +250,53 @@ function  allEmployees_byManager(){
                 });
          }                
  )};
+
+ function updateRole(){
+    connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee",
+    (err, results) => {
+        if (err) throw err;
+        console.log(results);
+        inquirer
+            .prompt([
+                {
+                    name: "employee",
+                    message: "which role's employee would you like to modify?",
+                    type: "rawlist",
+                    choices: function () {
+                        return results.map(item => {
+                            return "Role Id " + item.role_id + " " +item.first_name+ " " + item.last_name;
+                        });
+                    },
+                },  
+                 {
+                    name: "role",
+                    message:"what role does the employee has?",
+                    type:"input"
+                }
+            ]).then(function (response) {
+                connection.query("UPDATE role SET ? JOIN employee ON ? ",
+                {
+                tittle:response.role,
+               
+               role_id:response.employee[8]
+
+                },(err, results) => {
+                    if (err) throw err;
+                    results.forEach(element => {
+                        console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
+                        
+                     });
+                     runSearch();
+                    });
+                
+                });
+         }                
+ )};
+
+
+
+
+ 
 
 
 
