@@ -57,7 +57,7 @@ function runSearch() {
                     addEmployee();
                     break;
 
-                case "Add employee":
+                case "Remove employee":
                     deleteEmployee();
                     break;
 
@@ -312,6 +312,36 @@ function  allEmployees_byManager(){
          }                
  )};
 
+function deleteEmployee(){
+    connection.query("SELECT first_name, last_name, employee_id FROM employee",
+    (err, results) => {
+        if (err) throw err;
+        console.log(results);
+        inquirer
+            .prompt([
+                {
+                    name: "employeeselected",
+                    message: "which employee would you like to delete?",
+                    type: "rawlist",
+                    choices: function () {
+                        return results.map(item => {
+                            return item.employee_id + " " + item.first_name+ " " + item.lastname;
+                        });
+                    },
+                },
+            ]).then(function (response) {
+                connection.query("DELETE FROM employee WHERE ?",
+                {
+                    employee_id:response.employeeselected[0]
+                },
+                (err, results) => {
+                    if (err) throw err;
+                    console.log("employee deleted"); 
+                });
+                runSearch();
+            });
+     }                
+)};
 
 
 
