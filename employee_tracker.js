@@ -21,7 +21,7 @@ connection.connect(function (err) {
 });
 
 function runSearch() {
-    //Run an inquirer prompt to ask for the user's desired action
+
     inquirer
         .prompt({
             name: "action",
@@ -38,7 +38,7 @@ function runSearch() {
             ]
         })
         .then(answer => {
-            //Based on the selected action, call one of our functions to query the database
+            
             switch (answer.action) {
                 case "View all employees":
                     allEmployees();
