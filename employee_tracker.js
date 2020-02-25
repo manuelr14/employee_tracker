@@ -362,7 +362,7 @@ function updateManager(){
                 },
                 {
                     name: "managerupdate",
-                    message: "who is going to be the employee manager?",
+                    message: "who is going to be the employee's manager?",
                     type: "rawlist",
                     choices: function () {
                         return results.map(item => {
@@ -380,8 +380,9 @@ function updateManager(){
                 (err, results) => {
                     if (err) throw err;
                     console.log("employee deleted"); 
+                    runSearch();
                 });
-                runSearch();
+               
             });
      }                
 )};
