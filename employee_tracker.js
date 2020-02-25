@@ -38,7 +38,7 @@ function runSearch() {
             ]
         })
         .then(answer => {
-            
+
             switch (answer.action) {
                 case "View all employees":
                     allEmployees();
@@ -83,7 +83,6 @@ function allEmployees() {
                 
             });
             runSearch();
-
         }
     )
 };
