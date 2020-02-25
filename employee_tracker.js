@@ -57,6 +57,10 @@ function runSearch() {
                     addEmployee();
                     break;
 
+                case "Add employee":
+                    deleteEmployee();
+                    break;
+
                 case "Update employee role":
                     updateRole();
                     break;
@@ -77,8 +81,9 @@ function allEmployees() {
             results.forEach(element => {
 
                 console.log('employeerID:' + element.employee_id + ' || name: ' + element.first_name + ' || last name: ' + element.last_name + ' || Role: ' + element.tittle + ' || Salary: ' + element.salary)
-                runSearch();
+                
             });
+            runSearch();
 
         }
     )
@@ -105,7 +110,7 @@ function addEmployee() {
                     },
                     {
                         name: "role",
-                        message: "what is the employee role?",
+                        message: "what department does the employee works?",
                         type: "rawlist",
                         choices: function () {
                             return results.map(item => {
@@ -120,17 +125,13 @@ function addEmployee() {
                         choices: ["Yes", "No"]
                     }
                 ]).then(function (response) {
-                    var name = response.name;
-                    var lastname = response.lastname;
+                    // var name = response.name;
+                    // var lastname = response.lastname;
                     console.log(response);
-                    connection.query("INSERT INTO employee (first_name, last_name) VALUES (?)",
-                        {
-                            name,
-                            lastname
-
-                        }, (err, results) => {
+                    connection.query("INSERT INTO employee (first_name, last_name) VALUES ${response.name}, ${response.lastname}",
+                         (err, results) => {
                             if (err) throw err;
-                            console.log(results);
+                            // console.log(results);
                         });
 
 
@@ -170,7 +171,7 @@ function addEmployee() {
                         runSearch();
                     };
 
-                    //   runSearch();
+                    
 
 
 
