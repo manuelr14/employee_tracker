@@ -234,7 +234,9 @@ function allEmployees_byDep() {
                             if (err) throw err;
                             results.forEach(element => {
                             console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
+                            
                          });
+                         runSearch();
                     });
                 
                });
