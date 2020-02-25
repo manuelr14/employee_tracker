@@ -84,34 +84,6 @@ function allEmployees() {
     )
 };
 
-function rolePicker() {
-
-    connection.query("SELECT name FROM department",
-        (err, results) => {
-            if (err) throw err;
-            console.log(results);
-
-            // results.forEach(element => {
-            inquirer
-                .prompt([
-                    {
-                        name: "roleoptions",
-                        type: "rawlist",
-                        choices: function () {
-                            return results.map(item => {
-                                return item.item_name;
-                            });
-                        },
-                        message: "what is the employee role?"
-
-                    }
-
-
-                ])
-
-
-        });
-};
 
 function addEmployee() {
     connection.query("SELECT name FROM department",
@@ -242,5 +214,43 @@ function allEmployees_byDep() {
                });
         }                
 )};
+
+function  allEmployees_byManager(){
+    connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
+    (err, results) => {
+        if (err) throw err;
+        console.log(results);
+        inquirer
+            .prompt([
+                {
+                    name: "manager",
+                    message: "which manager's employee would you like to see?",
+                    type: "rawlist",
+                    choices: function () {
+                        return results.map(item => {
+                            return item.employee_id;
+                        });
+                    },
+                },
+            ]).then(function (response) {
+                connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE ?",
+                {
+                manager_id: response.manager
+
+                },(err, results) => {
+                    if (err) throw err;
+                    results.forEach(element => {
+                        console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
+                        
+                     });
+                     runSearch();
+                    });
+                
+                });
+         }                
+ )};
+
+
+
 
 
