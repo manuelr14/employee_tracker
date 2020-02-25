@@ -128,7 +128,7 @@ function addEmployee() {
                     connection.query("INSERT INTO employee (first_name, last_name) VALUES ${response.name}, ${response.lastname}",
                          (err, results) => {
                             if (err) throw err;
-                            // console.log(results);
+               
                         });
 
 
