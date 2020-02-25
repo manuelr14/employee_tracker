@@ -271,7 +271,8 @@ function updateRole() {
                                 return item.tittle;
                             });
                         },
-                {
+                    },
+                        {
                         name: "newsalary",
                         message: "what is the employee's new salary?",
                         type: "input"
