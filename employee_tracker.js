@@ -370,7 +370,7 @@ function updateManager(){
                 });
                
             });
-     }                
+         }                
 )};
 
 
