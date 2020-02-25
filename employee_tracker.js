@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
-    //Make sure we're calling our runSearch function ONLY AFTER our connection to the database was successfully established
+
     runSearch();
 });
 
