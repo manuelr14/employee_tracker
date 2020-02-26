@@ -89,7 +89,7 @@ function allEmployees() {
 
 
 function addEmployee() {
-    connection.query("SELECT name FROM department",
+    connection.query("SELECT name , department_id FROM department",
         (err, results) => {
             if (err) throw err;
             console.log(results);
@@ -112,7 +112,7 @@ function addEmployee() {
                         type: "rawlist",
                         choices: function () {
                             return results.map(item => {
-                                return item.name;
+                                return item.department_id + " " + item.name;
                             });
                         },
                     },
@@ -125,7 +125,7 @@ function addEmployee() {
                 ]).then(function (response) {
 
                     console.log(response);
-                    connection.query("INSERT INTO employee (first_name, last_name) VALUES ${response.name}, ${response.lastname}",
+                    connection.query(`INSERT INTO employee (first_name, last_name, role_id) VALUES (${response.name}, ${response.lastname}, ${response.role[0]})`,
                         (err, results) => {
                             if (err) throw err;
 
@@ -133,7 +133,7 @@ function addEmployee() {
 
 
                     if (response.manager === "Yes") {
-                        connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE employee_id IN (SELECT manager_id from employee",
+                        connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
                             (err, resultsmanager) => {
                                 if (err) throw err;
                                 console.log(resultsmanager);
@@ -145,20 +145,20 @@ function addEmployee() {
                                             type: "rawlist",
                                             choices: function () {
                                                 return resultsmanager.map(item => {
-                                                    return item.first_name;
+                                                    return item.manager_id + " " +item.first_name;
                                                 });
                                             },
                                         },
                                     ]).then(response)
-                                connection.query("UPDATE employee SET ? WHERE ?",
-                                    {
-                                        first_name: response.managers
+                                connection.query(`UPDATE employee SET manager_id = ${response.managers} WHERE first_name= ${response.name}, last_name= ${response.last_name}`,
+                                    // {
+                                    //     first_name: response.managers
 
-                                    },
-                                    {
-                                        first_name: response.name,
-                                        last_name: response.lastname
-                                    }, (err, results) => {
+                                    // },
+                                    // {
+                                    //     first_name: response.name,
+                                    //     last_name: response.lastname
+                                     (err, results) => {
                                         if (err) throw err;
                                         console.log(results);
                                     });
@@ -316,7 +316,7 @@ function deleteEmployee() {
                         type: "rawlist",
                         choices: function () {
                             return results.map(item => {
-                                return item.employee_id + " " + item.first_name + " " + item.lastname;
+                                return item.employee_id + " " + item.first_name + " " + item.last_name;
                             });
                         },
                     },
