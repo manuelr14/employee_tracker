@@ -282,7 +282,7 @@ function updateRole() {
                 ]).then(function (response) {
                     console.log(response.employee);
                     console.log(response.newtittle);
-                    connection.query("UPDATE role SET ? WHERE ? ",
+                    connection.query(`UPDATE role SET ittle = ${response.newtittle}, salary = ${response.newsalary} WHERE role_id = ${response.employee[0]} `,
                         {
                             tittle: response.newtittle,
                             salary: response.newsalary,
