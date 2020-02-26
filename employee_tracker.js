@@ -321,9 +321,10 @@ function deleteEmployee() {
                         },
                     },
                 ]).then(function (response) {
+                    console.log(response.employeeselected.slice(0,2);
                     connection.query("DELETE FROM employee WHERE ?",
                         {
-                            employee_id: response.employeeselected[0]
+                            employee_id: response.employeeselected.substring(0,2)
                         },
                         (err, results) => {
                             if (err) throw err;
