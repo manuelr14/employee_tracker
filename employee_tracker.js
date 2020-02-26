@@ -306,6 +306,7 @@ function deleteEmployee() {
     connection.query("SELECT first_name, last_name, employee_id FROM employee",
         (err, results) => {
             if (err) throw err;
+            
             console.log(results);
             inquirer
                 .prompt([
@@ -362,18 +363,20 @@ function updateManager() {
                         },
                     },
                 ]).then(function (response) {
-                    connection.query("UPDATE employee SET ? WHERE ?",
-                        {
-                            manager_id: response.managerupdate[0],
-                            employee_id: response.employeetoupdate[0]
-
-                        },
+                    connection.query(`UPDATE employee SET manager_id = ${response.managerupdate[0]} WHERE employee_id = ${response.employeetoupdate[0]}`,
+                    // {
+                       
+                            
+                    //         manager_id: response.managerupdate[0],
+                    //         employee_id: response.employeetoupdate[0]
+                            
+                    //     },
                         (err, results) => {
                             if (err) throw err;
-                            console.log("employee deleted");
+                            console.log("manager updated");
                             runSearch();
                         });
-
+                        
                 });
         }
     )
