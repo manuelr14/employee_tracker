@@ -352,7 +352,8 @@ function updateManager() {
                         type: "rawlist",
                         choices: function () {
                             return results.map(item => {
-                                return item.employee_id + " " + item.first_name + " " + item.last_name;
+                                return item.employee_id 
+                                // + " " + item.first_name + " " + item.last_name;
                             });
                         },
                     },
@@ -362,12 +363,13 @@ function updateManager() {
                         type: "rawlist",
                         choices: function () {
                             return results.map(item => {
-                                return item.employee_id + " " + item.first_name + " " + item.last_name;
+                                return item.employee_id 
+                                // + " " + item.first_name + " " + item.last_name;
                             });
                         },
                     },
                 ]).then(function (response) {
-                    connection.query(`UPDATE employee SET manager_id = ${response.managerupdate[0]} WHERE employee_id = ${response.employeetoupdate[0]}`,
+                    connection.query(`UPDATE employee SET manager_id = ${response.managerupdate} WHERE employee_id = ${response.employeetoupdate}`,
                     // {
                        
                             
