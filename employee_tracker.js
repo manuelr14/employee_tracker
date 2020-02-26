@@ -72,9 +72,11 @@ function runSearch() {
 }
 
 function allEmployees() {
+    // let query = "SELECT employee_id, first_name, last_name, role.tittle, role.salary FROM employee JOIN role ON employee.role_id = role.role_id" 
 
-    connection.query("SELECT employee_id, first_name, last_name, role.tittle, role.salary FROM employee JOIN role ON employee.role_id = role.role_id",
-        (err, results) => {
+    let query = " SELECT * FROM employee"
+
+    connection.query(query,(err, results) => {
             if (err) throw err;
 
             results.forEach(element => {
@@ -321,7 +323,7 @@ function deleteEmployee() {
                         },
                     },
                 ]).then(function (response) {
-                    console.log(response.employeeselected.slice(0,2);
+                    console.log(response.employeeselected);
                     connection.query("DELETE FROM employee WHERE ?",
                         {
                             employee_id: response.employeeselected.substring(0,2)
