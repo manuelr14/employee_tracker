@@ -81,7 +81,7 @@ function allEmployees() {
 
             results.forEach(element => {
 
-                console.log('employeerID:' + element.employee_id + ' || name: ' + element.first_name + ' || last name: ' + element.last_name + ' || Role: ' + element.tittle + ' || Salary: ' + element.salary)
+                console.log('employeerID:' + element.employee_id + ' || name: ' + element.first_name + ' || last name: ' + element.last_name + ' || RoleID: ' + element.role_id + ' || ManagerID: ' + element.manager_id)
 
             });
             runSearch();
@@ -91,8 +91,9 @@ function allEmployees() {
 
 
 function addEmployee() {
-    connection.query("SELECT name , department_id FROM department",
-        (err, results) => {
+    let query = "SELECT name , department_id FROM department";
+   
+    connection.query(query,(err, results) => {
             if (err) throw err;
             console.log(results);
 
