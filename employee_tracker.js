@@ -79,9 +79,12 @@ function allEmployees() {
     connection.query(query,(err, results) => {
             if (err) throw err;
 
+            console.log("id || first_name || last_name || tittle || Salary || department");
+            console.log("--    ----------    ---------    ------    ------    ----------")
+
             results.forEach(element => {
 
-                console.log('employeerID:' + element.employee_id + ' || name: ' + element.first_name + ' || last name: ' + element.last_name + ' || Tittle: ' + element.tittle + ' || salary: ' + element.salary + ' || department: ' + element.name)
+                console.log(element.employee_id + '     ' +element.first_name + '         ' + element.last_name + '      ' + element.tittle + '   ' + element.salary + '    ' + element.name)
 
             });
             runSearch();
