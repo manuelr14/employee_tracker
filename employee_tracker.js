@@ -1,6 +1,8 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 
+
+
 const connection = mysql.createConnection({
     host: "localhost",
 
@@ -95,11 +97,13 @@ function allEmployees() {
 
 function addEmployee() {
 
-    let query = " SELECT employee_id, first_name, last_name, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
+  
 
-    connection.query(query, (err, results) => {
+    let query1 = " SELECT DISTINCT employee_id, first_name, last_name, role.role_id, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
+
+    connection.query(query1, (err, results) => {
         if (err) throw err;
-        // console.log(results);
+       console.log(results);
 
         inquirer
             .prompt([
@@ -141,36 +145,58 @@ function addEmployee() {
                         return results.map(item => {
                             return item.tittle;
                         });
+
                     },
                 }
 
             ]).then(function (response) {
+      
+
+                var roleid = results.map( item => {
+                    if (item.tittle === response.tittle){
+                        return item.role_id
+                    }
+                })
+
+                var managerid = results.map( item => {
+                    if (item.first_name === response.manager){
+                        return item.employee_id
+                    }
+                })
+                console.log ("este es " + managerid);
+                console.log ("este es " + roleid);
 
                 // console.log(response);
-                let query = `SELECT department.department_id, role.role_id, role.salary, employee.employee_id FROM  employee, role, department WHERE  'employee.first_name' = '${response.manager}' AND 'role.tittle' = '${response.tittle}' AND 'department.name' = '${response.department}'`
+                // let query = `SELECT department.department_id, role.role_id, role.salary, employee.employee_id FROM  employee, role, department WHERE  'employee.first_name' = '${response.manager}' AND 'role.tittle' = '${response.tittle}' AND 'department.name' = '${response.department}'`
 
-                // let query = `SELECT department.department_id, role.role_id, role.salary, employee.employee_id FROM department JOIN  role ON role.tittle=${response.tittle} JOIN  employee ON employee.first_name=${response.manager} WHERE department.name LIKE ${response.department} `
+                // // let query = 'SELECT * from role'
 
-                // let query = `SELECT department.department_id FROM ( SELECT department.name=${response.department} FROM department) AND SELECT role.role_id FROM (SELECT role.tittle=${response.tittle} FROM role) AND SELECT role.salary FROM (SELECT role.tittle=${response.tittle} FROM role) AND SELECT employee.employee_id FROM  (SELECT employee.first_name=${response.manager} FROM employee) `
+                // // let query = `SELECT department.department_id, role.role_id, role.salary, employee.employee_id FROM department JOIN  role ON role.tittle=${response.tittle} JOIN  employee ON employee.first_name=${response.manager} WHERE department.name LIKE ${response.department} `
+
+                // // let query = `SELECT department.department_id FROM ( SELECT department.name=${response.department} FROM department) AND SELECT role.role_id FROM (SELECT role.tittle=${response.tittle} FROM role) AND SELECT role.salary FROM (SELECT role.tittle=${response.tittle} FROM role) AND SELECT employee.employee_id FROM  (SELECT employee.first_name=${response.manager} FROM employee) `
 
                 
-                connection.query(query, (err, resultsid) => {
-                    if (err) throw err;
+                // connection.query(query, (err, results) => {
+                //     if (err) throw err;
+                //     console.log(results);
 
-                    let query2 = `INSERT INTO role (tittle, salary, department_id) VALUES (${response.tittle}, ${resultsid.salary}, ${resultsid.department_id}) AND INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(${response.name}, ${response.lastname}, ${resultsid.role_id}, ${resultsid.employee_id} ))`
+                    // let query2 = `INSERT INTO role (tittle, salary, department_id) VALUES (${response.tittle}, ${resultsid.salary}, ${resultsid.department_id}) AND INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(${response.name}, ${response.lastname}, ${resultsid.role_id}, ${resultsid.employee_id})`
+
+                    let query2 = `INSERT INTO employee (first_name, role_id, manager_id, last_name) VALUES ( '${response.name}',  ${roleid} ${managerid} '${response.lastname}' )`
 
                     connection.query(query2, (err, res) => {
                         if (err) throw err;
 
                         runSearch();
-
+                        managerid = "";
+                        roleid = "";
                     });
 
                 });
             });
 
 
-    });
+    // });
 };
 
 function allEmployees_byDep() {
