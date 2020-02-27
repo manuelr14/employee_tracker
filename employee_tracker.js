@@ -95,12 +95,17 @@ function allEmployees() {
 };
 
 
+
+
+
 function addEmployee() {
 
   
 
-    let query1 = " SELECT DISTINCT employee_id, first_name, last_name, role.role_id, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
-
+//    let query1 = " SELECT DISTINCT employee_id, first_name, last_name, role.role_id, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
+//    let query1 = " SELECT DISTINCT employee_id, first_name,  role.tittle,  department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
+   let query1 = "SELECT department.name, FROM department"
+    
     connection.query(query1, (err, results) => {
         if (err) throw err;
        console.log(results);
@@ -127,6 +132,9 @@ function addEmployee() {
                         });
                     },
                 },
+
+
+                
                 {
                     name: "manager",
                     message: "Who is the employee's manager?",
@@ -271,6 +279,10 @@ function allEmployees_byManager() {
         }
     )
 };
+
+
+
+
 
 function updateRole() {
     connection.query("SELECT first_name, last_name, employee_id, employee.role_id, role.tittle, role.salary  FROM employee JOIN role ON employee.role_id = role.role_id",
