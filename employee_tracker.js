@@ -76,106 +76,101 @@ function allEmployees() {
 
     let query = " SELECT employee_id, first_name, last_name, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
 
-    connection.query(query,(err, results) => {
-            if (err) throw err;
+    connection.query(query, (err, results) => {
+        if (err) throw err;
 
-            console.log("id || first_name || last_name || tittle || Salary || department");
-            console.log("--    ----------    ---------    ------    ------    ----------")
+        console.log("id || first_name || last_name || tittle || Salary || department");
+        console.log("--    ----------    ---------    ------    ------    ----------")
 
-            results.forEach(element => {
+        results.forEach(element => {
 
-                console.log(element.employee_id + '     ' +element.first_name + '         ' + element.last_name + '      ' + element.tittle + '   ' + element.salary + '    ' + element.name)
+            console.log(element.employee_id + '     ' + element.first_name + '         ' + element.last_name + '      ' + element.tittle + '   ' + element.salary + '    ' + element.name)
 
-            });
-            runSearch();
-        }
+        });
+        runSearch();
+    }
     )
 };
 
 
 function addEmployee() {
-    let query = "SELECT name , department_id FROM department";
-   
-    connection.query(query,(err, results) => {
-            if (err) throw err;
-            console.log(results);
 
-            inquirer
-                .prompt([
-                    {
-                        name: "name",
-                        type: "input",
-                        message: "what is the employee name?"
-                    },
-                    {
-                        name: "lastname",
-                        type: "input",
-                        message: "what is the employee last name?",
-                    },
-                    {
-                        name: "role",
-                        message: "what department does the employee works?",
-                        type: "rawlist",
-                        choices: function () {
-                            return results.map(item => {
-                                return item.department_id + " " + item.name;
-                            });
-                        },
-                    },
-                    {
-                        name: "manager",
-                        message: "Does the employee has a manager?",
-                        type: "list",
-                        choices: ["Yes", "No"]
-                    }
-                ]).then(function (response) {
+    let query = " SELECT employee_id, first_name, last_name, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
 
-                    console.log(response);
-                    connection.query(`INSERT INTO employee (first_name, last_name, role_id) VALUES (${response.name}, ${response.lastname}, ${response.role[0]})`,
-                        (err, results) => {
-                            if (err) throw err;
+    connection.query(query, (err, results) => {
+        if (err) throw err;
+        // console.log(results);
 
+        inquirer
+            .prompt([
+                {
+                    name: "name",
+                    type: "input",
+                    message: "what is the employee name?"
+                },
+                {
+                    name: "lastname",
+                    type: "input",
+                    message: "what is the employee last name?",
+                },
+                {
+                    name: "department",
+                    message: "what department does the employee works?",
+                    type: "rawlist",
+                    choices: function () {
+                        return results.map(item => {
+                            return item.name;
                         });
-
-
-                    if (response.manager === "Yes") {
-                        connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
-                            (err, resultsmanager) => {
-                                if (err) throw err;
-                                console.log(resultsmanager);
-                                inquirer
-                                    .prompt([
-                                        {
-                                            name: "managers",
-                                            message: "who is the manager?",
-                                            type: "rawlist",
-                                            choices: function () {
-                                                return resultsmanager.map(item => {
-                                                    return item.manager_id + " " +item.first_name;
-                                                });
-                                            },
-                                        },
-                                    ]).then(response)
-                                connection.query(`UPDATE employee SET manager_id = ${response.managers} WHERE first_name= ${response.name}, last_name= ${response.last_name}`,
-                                    // {
-                                    //     first_name: response.managers
-
-                                    // },
-                                    // {
-                                    //     first_name: response.name,
-                                    //     last_name: response.lastname
-                                     (err, results) => {
-                                        if (err) throw err;
-                                        console.log(results);
-                                    });
-                            });
-                    } else {
-                        console.log("let's do it again");
-                        runSearch();
-                    };
+                    },
+                },
+                {
+                    name: "manager",
+                    message: "Who is the employee's manager?",
+                    type: "list",
+                    choices: function () {
+                        return results.map(item => {
+                            return item.first_name;
+                        });
+                    },
+                }, 
+                {
+                    name: "tittle",
+                    message: "What is the employee's role?",
+                    type: "list",
+                    choices: function () {
+                        return results.map(item => {
+                            return item.tittle;
+                        });
+                    },
                 }
-                )
-        });
+
+            ]).then(function (response) {
+
+                // console.log(response);
+                let query = `SELECT department.department_id, role.role_id, role.salary, employee.employee_id FROM  employee, role, department WHERE  'employee.first_name' = '${response.manager}' AND 'role.tittle' = '${response.tittle}' AND 'department.name' = '${response.department}'`
+
+                // let query = `SELECT department.department_id, role.role_id, role.salary, employee.employee_id FROM department JOIN  role ON role.tittle=${response.tittle} JOIN  employee ON employee.first_name=${response.manager} WHERE department.name LIKE ${response.department} `
+
+                // let query = `SELECT department.department_id FROM ( SELECT department.name=${response.department} FROM department) AND SELECT role.role_id FROM (SELECT role.tittle=${response.tittle} FROM role) AND SELECT role.salary FROM (SELECT role.tittle=${response.tittle} FROM role) AND SELECT employee.employee_id FROM  (SELECT employee.first_name=${response.manager} FROM employee) `
+
+                
+                connection.query(query, (err, resultsid) => {
+                    if (err) throw err;
+
+                    let query2 = `INSERT INTO role (tittle, salary, department_id) VALUES (${response.tittle}, ${resultsid.salary}, ${resultsid.department_id}) AND INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(${response.name}, ${response.lastname}, ${resultsid.role_id}, ${resultsid.employee_id} ))`
+
+                    connection.query(query2, (err, res) => {
+                        if (err) throw err;
+
+                        runSearch();
+
+                    });
+
+                });
+            });
+
+
+    });
 };
 
 function allEmployees_byDep() {
@@ -288,7 +283,7 @@ function updateRole() {
                 ]).then(function (response) {
                     console.log(response.employee);
                     console.log(response.newtittle);
-                    connection.query(`UPDATE role SET ittle = ${response.newtittle}, salary = ${response.newsalary} WHERE role_id = ${response.employee[0]} `,
+                    connection.query(`UPDATE role SET tittle = ${response.newtittle}, salary = ${response.newsalary} WHERE role_id = ${response.employee[0]} `,
                         {
                             tittle: response.newtittle,
                             salary: response.newsalary,
@@ -312,7 +307,7 @@ function deleteEmployee() {
     connection.query("SELECT first_name, last_name, employee_id FROM employee",
         (err, results) => {
             if (err) throw err;
-            
+
             console.log(results);
             inquirer
                 .prompt([
@@ -330,7 +325,7 @@ function deleteEmployee() {
                     console.log(response.employeeselected);
                     connection.query("DELETE FROM employee WHERE ?",
                         {
-                            employee_id: response.employeeselected.substring(0,2)
+                            employee_id: response.employeeselected.substring(0, 2)
                         },
                         (err, results) => {
                             if (err) throw err;
@@ -344,51 +339,51 @@ function deleteEmployee() {
 
 function updateManager() {
 
-allEmployees();
+    // allEmployees();
     let query = "SELECT first_name, last_name, employee_id FROM employee"
-    connection.query(query,(err, results) => {
-            if (err) throw err;
-            inquirer
-                .prompt([
-                    {
-                        name: "employeetoupdate",
-                        message: "which employee would you like to update the manager?",
-                        type: "rawlist",
-                        choices: function () {
-                            return results.map(item => {
-                                return item.employee_id 
-                                // + " " + item.first_name + " " + item.last_name;
-                            });
-                        },
+    connection.query (query, (err, results)  => {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    name: "employeetoupdate",
+                    message: "which employee would you like to update the manager?",
+                    type: "rawlist",
+                    choices:   function () {
+                        return results.map( item => {
+                            return item.employee_id
+                            // + " " + item.first_name + " " + item.last_name;
+                        });
                     },
-                    {
-                        name: "managerupdate",
-                        message: "who is going to be the employee's manager?",
-                        type: "rawlist",
-                        choices: function () {
-                            return results.map(item => {
-                                return item.employee_id 
-                                // + " " + item.first_name + " " + item.last_name;
-                            });
-                        },
+                },
+                {
+                    name: "managerupdate",
+                    message: "who is going to be the employee's manager?",
+                    type: "rawlist",
+                    choices: function () {
+                         return results.map(item => {
+                            return item.employee_id
+                            // + " " + item.first_name + " " + item.last_name;
+                        });
                     },
-                ]).then(function (response) {
-                    connection.query(`UPDATE employee SET manager_id = ${response.managerupdate} WHERE employee_id = ${response.employeetoupdate}`,
+                },
+            ]).then(function (response) {
+                connection.query(`UPDATE employee SET manager_id = ${response.managerupdate} WHERE employee_id = ${response.employeetoupdate}`,
                     // {
-                       
-                            
+
+
                     //         manager_id: response.managerupdate[0],
                     //         employee_id: response.employeetoupdate[0]
-                            
+
                     //     },
-                        (err, results) => {
-                            if (err) throw err;
-                            console.log("manager updated");
-                            allEmployees();
-                        });
-                        
-                });
-        }
+                    (err, results) => {
+                        if (err) throw err;
+                        console.log("manager updated!");
+                        // allEmployees();
+                    });
+
+            });
+    }
     )
 };
 
@@ -396,7 +391,7 @@ allEmployees();
 
 // function promptRole(){
 //     let query = "SELECT * FROM role";
-   
+
 //     connection.query(query,(err, results) => {
 //             if (err) throw err;
 //             console.log(results);
@@ -410,7 +405,7 @@ allEmployees();
 //                         choices: function () {
 //                             return results.map(item => {
 //                                 return item.employee_id 
-                                
+
 //                             });
 //                         },
 //                     },                 
