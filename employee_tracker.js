@@ -74,14 +74,14 @@ function runSearch() {
 function allEmployees() {
     // let query = "SELECT employee_id, first_name, last_name, role.tittle, role.salary FROM employee JOIN role ON employee.role_id = role.role_id" 
 
-    let query = " SELECT * FROM employee"
+    let query = " SELECT employee_id, first_name, last_name, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
 
     connection.query(query,(err, results) => {
             if (err) throw err;
 
             results.forEach(element => {
 
-                console.log('employeerID:' + element.employee_id + ' || name: ' + element.first_name + ' || last name: ' + element.last_name + ' || RoleID: ' + element.role_id + ' || ManagerID: ' + element.manager_id)
+                console.log('employeerID:' + element.employee_id + ' || name: ' + element.first_name + ' || last name: ' + element.last_name + ' || Tittle: ' + element.tittle + ' || salary: ' + element.salary + ' || department: ' + element.name)
 
             });
             runSearch();
@@ -340,10 +340,11 @@ function deleteEmployee() {
 };
 
 function updateManager() {
-    connection.query("SELECT first_name, last_name, employee_id FROM employee",
-        (err, results) => {
+
+allEmployees();
+    let query = "SELECT first_name, last_name, employee_id FROM employee"
+    connection.query(query,(err, results) => {
             if (err) throw err;
-            console.log(results);
             inquirer
                 .prompt([
                     {
@@ -380,7 +381,7 @@ function updateManager() {
                         (err, results) => {
                             if (err) throw err;
                             console.log("manager updated");
-                            runSearch();
+                            allEmployees();
                         });
                         
                 });
@@ -390,7 +391,29 @@ function updateManager() {
 
 
 
+// function promptRole(){
+//     let query = "SELECT * FROM role";
+   
+//     connection.query(query,(err, results) => {
+//             if (err) throw err;
+//             console.log(results);
 
+//             inquirer
+//                 .prompt([
+//                     {
+//                         name: "role",
+//                         message: "what is the employee role?",
+//                         type: "rawlist",
+//                         choices: function () {
+//                             return results.map(item => {
+//                                 return item.employee_id 
+                                
+//                             });
+//                         },
+//                     },                 
+
+
+// }
 
 
 
