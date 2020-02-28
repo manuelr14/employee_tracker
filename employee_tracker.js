@@ -81,7 +81,7 @@ function allEmployees() {
     connection.query(query, (err, results) => {
         if (err) throw err;
 
-        console.log("id ||     name    );
+        console.log("id ||     name    ");
         console.log("--    ----------  ")
 
         results.forEach(element => {
@@ -105,7 +105,7 @@ function addEmployee() {
 
     //    let query1 = " SELECT DISTINCT employee_id, first_name, last_name, role.role_id, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
     //    let query1 = " SELECT DISTINCT employee_id, first_name,  role.tittle,  department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
-    let query1 = "SELECT name FROM department"
+    let query1 = "SELECT * FROM department"
 
     connection.query(query1, (err, results) => {
         if (err) throw err;
@@ -128,13 +128,15 @@ function addEmployee() {
                     message: "what department does the employee works?",
                     type: "rawlist",
                     choices: function () {
+                        console.log("-------DEPARTMENTS-----");
                         return results.map(item => {
-                            return item.name;
+                            console.log("| id " + item.department_id + " -> " + item.name);
+                            return item.department_id
                         });
                     }
                 }]).then(function (response1) {
 
-                    let query2 = "SELECT tittle , role_id FROM role"
+                    let query2 = "SELECT * FROM role"
 
                     connection.query(query2, (err, results1) => {
                         if (err) throw err;
@@ -146,8 +148,10 @@ function addEmployee() {
                                     message: "What is the employee's role?",
                                     type: "list",
                                     choices: function () {
+                                        console.log("------TITTLE-----------------------");
                                         return results1.map(item => {
-                                            return item.tittle;
+                                            console.log("| " + item.role_id + "-> " + item.tittle);
+                                            return item.role_id;
                                         });
 
                                     },
@@ -155,7 +159,7 @@ function addEmployee() {
                             ]).then(function (response2) {
 
 
-                                let query3 = "SELECT first_name FROM employee"
+                                let query3 = "SELECT * FROM employee"
 
                                 connection.query(query3, (err, results2) => {
                                     if (err) throw err;
@@ -167,8 +171,10 @@ function addEmployee() {
                                                 message: "Who is the employee's manager?",
                                                 type: "list",
                                                 choices: function () {
+                                                    console.log("-------MANAGERS-----");
                                                     return results2.map(item => {
-                                                        return item.first_name;
+                                                        console.log("| id " + item.employee_id + "-> " + item.first_name + " " + item.last_name)
+                                                        return item.employee_id;
                                                     });
                                                 },
                                             }
@@ -181,28 +187,16 @@ function addEmployee() {
                                             var manager = response3.manager;
                                             console.log(name + " " + lastname + " " + department + " " + tittle + " " + manager);
 
-                                            let query3 = `SELECT employee_id FROM employee WHERE first_name = '${response3.manager}'`
+                                            let query3 = `INSERT INTO employee ( first_name, last_name, role_id, manager_id) VALUES ('${response1.name}','${response1.lastname}',${response2.tittle},${response3.manager})`
                                             connection.query(query3, (err, results3) => {
                                                 if (err) throw err;
                                                 console.log(results3);
 
-                                            });
-                                            let query4 = `SELECT role_id FROM role WHERE tittle = '${response2.tittle}'`
-                                            connection.query(query4, (err, response4) => {
-                                                if (err) throw err;
-
-                                                console.log(response4)
-
-                                            });
-                                            let query5 = `INSERT INTO employee ( first_name, last_name, manager_id) VALUES ('${response1.name}','${response1.last_name}',${response4},${results3})`
-                                            connection.query(query5, (err, results5) => {
-                                                if (err) throw err;
+                                                
                                                 console.log("employee added!");
                                                 runSearch();
                                             });
-
-
-                                        });
+                                  
 
 
                                 });
@@ -211,7 +205,7 @@ function addEmployee() {
                 });
 
 
-        // });
+        });
     });
 
 };
