@@ -248,10 +248,13 @@ function addEmployee() {
                         
                         connection.query(query, (err, results) => {       
                         if (err) throw err;
+                                console.log("------EMPLOYESS------");
+                                
                                 results.forEach(element => {
-                                    console.log('name: ' + element.first_name + ' ' + element.last_name);
+                                    console.log('| ' + element.first_name + ' ' + element.last_name);
 
                                 });
+                                console.log("----------------------");
                                 runSearch();
                             });
 
