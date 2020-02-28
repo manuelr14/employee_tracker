@@ -234,7 +234,7 @@ function addEmployee() {
                             message: "Pick department by id to see employees",
                             type: "rawlist",
                             choices: function () {
-                                console.log("__________DEPARTMENTS___________");
+                                console.log("-------DEPARTMENTS-----");
                                 return results.map(item => {
                                     console.log("| id "+item.department_id + " -> " +item.name);
                                     return item.department_id 
