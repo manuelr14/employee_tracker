@@ -82,7 +82,7 @@ function allEmployees() {
         if (err) throw err;
 
         console.log("id ||     name    ");
-        console.log("--    ----------  ")
+        console.log("--    -------------------------")
 
         results.forEach(element => {
 
