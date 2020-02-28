@@ -374,11 +374,13 @@ function updateRole() {
                         .prompt([
                             {
                                 name: "employeeselected",
-                                message: "which employee would you like to delete?",
+                                message: "Select employee by ID to delete",
                                 type: "rawlist",
                                 choices: function () {
+                                    console.log("------EMPLOYESS-----------------------");
                                     return results.map(item => {
-                                        return item.employee_id + " " + item.first_name + " " + item.last_name;
+                                        console.log("| " + item.employee_id + "-> " + item.first_name + " " + item.last_name );
+                                        return item.employee_id;
                                     });
                                 },
                             },
@@ -386,11 +388,11 @@ function updateRole() {
                             console.log(response.employeeselected);
                             connection.query("DELETE FROM employee WHERE ?",
                                 {
-                                    employee_id: response.employeeselected.substring(0, 2)
+                                    employee_id: response.employeeselected
                                 },
                                 (err, results) => {
                                     if (err) throw err;
-                                    console.log("employee deleted");
+                                    console.log("employee deleted!");
                                 });
                             runSearch();
                         });
