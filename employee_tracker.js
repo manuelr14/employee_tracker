@@ -314,42 +314,34 @@ function addEmployee() {
                     .prompt([
                         {
                             name: "employee",
-                            message: "which employee's role would you like to modify?",
+                            message: "Select an Employe by ID to modify the role",
                             type: "rawlist",
                             choices: function () {
+                                console.log("------EMPLOYESS-----------------------");
                                 return results.map(item => {
-                                    return item.employee_id + " " + item.first_name + " " + item.last_name + " " + item.tittle;
+                                    console.log("| " + item.employee_id + "-> " + item.first_name + " " + item.last_name + " " + item.tittle);
+                                    return item.employee_id;
                                 });
                             },
                         },
                         {
                             name: "newtittle",
-                            message: "what role this this employee does now?",
+                            message: "what is the new role of this employee?",
                             type: "rawlist",
                             choices: function () {
+                                console.log("------TITTLE-----------------------");
                                 return results.map(item => {
-                                    return item.tittle;
+                                    console.log("| " +item.role_id + "-> " + item.tittle);
+                                    return item.role_id;
                                 });
                             },
-                        },
-                        {
-                            name: "newsalary",
-                            message: "what is the employee's new salary?",
-                            type: "input"
-
                         }
 
+
                     ]).then(function (response) {
-                        console.log(response.employee);
-                        console.log(response.newtittle);
-                        connection.query(`UPDATE role SET tittle = ${response.newtittle}, salary = ${response.newsalary} WHERE role_id = ${response.employee[0]} `,
-                            {
-                                tittle: response.newtittle,
-                                salary: response.newsalary,
-
-                                role_id: response.employee[0]
-
-                            }, (err, results) => {
+                
+                        connection.query(`UPDATE employee SET role_id = ${response.newtittle} WHERE employee_id = ${response.employee} `,
+                             (err, results) => {
                                 if (err) throw err;
 
                                 console.log("role updated");
