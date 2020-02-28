@@ -264,7 +264,7 @@ function allEmployees_byManager() {
     connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE employee_id IN (SELECT manager_id from employee)",
         (err, results) => {
             if (err) throw err;
-            console.log(results);
+            // console.log(results);
             inquirer
                 .prompt([
                     {
@@ -272,7 +272,7 @@ function allEmployees_byManager() {
                         message: "which manager's employee would you like to see?",
                         type: "rawlist",
                         choices: function () {
-                            console.log("-------MANAGERS-----");
+                            console.log("-----------MANAGERS-------");
                             return results.map(item => {
                                 console.log("| id " + item.employee_id + "-> " + item.first_name + " " + item.last_name)
                                 return item.employee_id;
@@ -382,7 +382,7 @@ function updateRole() {
                                 },
                             },
                         ]).then(function (response) {
-                            console.log(response.employeeselected);
+                            // console.log(response.employeeselected);
                             connection.query("DELETE FROM employee WHERE ?",
                                 {
                                     employee_id: response.employeeselected
