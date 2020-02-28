@@ -76,19 +76,20 @@ function runSearch() {
 function allEmployees() {
     // let query = "SELECT employee_id, first_name, last_name, role.tittle, role.salary FROM employee JOIN role ON employee.role_id = role.role_id" 
 
-    let query = " SELECT employee_id, first_name, last_name, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
-
+    // let query = " SELECT employee_id, first_name, last_name, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
+    let query = `SELECT * FROM employee`
     connection.query(query, (err, results) => {
         if (err) throw err;
 
-        console.log("id || first_name || last_name || tittle || Salary || department");
-        console.log("--    ----------    ---------    ------    ------    ----------")
+        console.log("id ||     name    );
+        console.log("--    ----------  ")
 
         results.forEach(element => {
 
-            console.log(element.employee_id + '     ' + element.first_name + '         ' + element.last_name + '      ' + element.tittle + '   ' + element.salary + '    ' + element.name)
+            console.log(element.employee_id + ' -> ' + element.first_name + ' ' + element.last_name )
 
         });
+        console.log("-------------------------------")
         runSearch();
     }
     )
