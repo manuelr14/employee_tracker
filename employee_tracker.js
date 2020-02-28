@@ -408,9 +408,10 @@ function updateRole() {
                         message: "which employee would you like to update the manager?",
                         type: "rawlist",
                         choices: function () {
+                            console.log("-------EMPLOYESS-----");
                             return results.map(item => {
-                                return item.employee_id
-                                // + " " + item.first_name + " " + item.last_name;
+                                console.log("| id " + item.employee_id + "-> " + item.first_name + " " + item.last_name)
+                                return item.employee_id;
                             });
                         },
                     },
@@ -419,58 +420,29 @@ function updateRole() {
                         message: "who is going to be the employee's manager?",
                         type: "rawlist",
                         choices: function () {
+                            console.log("-------MANAGERS-----");
                             return results.map(item => {
-                                return item.employee_id
-                                // + " " + item.first_name + " " + item.last_name;
+                                console.log("| id " + item.employee_id + "-> " + item.first_name + " " + item.last_name)
+                                return item.employee_id;
                             });
                         },
                     },
                 ]).then(function (response) {
                     connection.query(`UPDATE employee SET manager_id = ${response.managerupdate} WHERE employee_id = ${response.employeetoupdate}`,
-                        // {
-
-
-                        //         manager_id: response.managerupdate[0],
-                        //         employee_id: response.employeetoupdate[0]
-
-                        //     },
+            
                         (err, results) => {
                             if (err) throw err;
-                            console.log("manager updated!");
-                            // allEmployees();
+                            console.log("--------------------");
+                            console.log("| Manager updated! |");
+                            console.log("--------------------");
+                            runSearch();
+                          
                         });
 
                 });
         }
         )
     };
-
-
-
-// function promptRole(){
-//     let query = "SELECT * FROM role";
-
-//     connection.query(query,(err, results) => {
-//             if (err) throw err;
-//             console.log(results);
-
-//             inquirer
-//                 .prompt([
-//                     {
-//                         name: "role",
-//                         message: "what is the employee role?",
-//                         type: "rawlist",
-//                         choices: function () {
-//                             return results.map(item => {
-//                                 return item.employee_id 
-
-//                             });
-//                         },
-//                     },                 
-
-
-// }
-
 
 
 
