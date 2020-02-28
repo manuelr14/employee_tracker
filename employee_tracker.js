@@ -232,9 +232,11 @@ function allEmployees_byDep() {
                             console.log("-------DEPARTMENTS-----");
                             return results.map(item => {
                                 console.log("| id " + item.department_id + " -> " + item.name);
+                            console.log("-----------------------")
                                 return item.department_id
 
                             });
+                            
                         },
                     },
                 ]).then(function (response) {
