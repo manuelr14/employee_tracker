@@ -81,12 +81,12 @@ function allEmployees() {
     connection.query(query, (err, results) => {
         if (err) throw err;
 
-        console.log("id ||     name    ");
-        console.log("--    -------------------------")
+        console.log("  id ||     Name    ");
+        console.log("  --    -------------------------")
 
         results.forEach(element => {
 
-            console.log(element.employee_id + ' -> ' + element.first_name + ' ' + element.last_name )
+            console.log("| "+ element.employee_id + ' -> ' + element.first_name + ' ' + element.last_name )
 
         });
         console.log("-------------------------------")
