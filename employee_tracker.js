@@ -275,24 +275,24 @@ function addEmployee() {
                             message: "which manager's employee would you like to see?",
                             type: "rawlist",
                             choices: function () {
+                                console.log("-------MANAGERS-----");
                                 return results.map(item => {
-                                    return "Id " + item.employee_id + " " + item.first_name + " " + item.last_name;
+                                    console.log("| id " + item.employee_id + "-> " + item.first_name + " " + item.last_name)
+                                    return item.employee_id;
                                 });
                             },
                         },
 
                     ]).then(function (response) {
-                        connection.query("SELECT first_name, last_name, employee_id, role_id FROM employee WHERE ?",
-                            {
-
-                                manager_id: response.manager[3]
-
-                            }, (err, results) => {
+                        let query= `SELECT first_name, last_name, employee_id, role_id FROM employee WHERE manager_id = ${response.manager}`
+                        connection.query(query,(err, results) => {
                                 if (err) throw err;
+                                console.log("------EMPLOYESS-----------------------");
                                 results.forEach(element => {
-                                    console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
+                                    console.log('| ' + element.first_name + ' ' + element.last_name);
 
                                 });
+                                console.log("--------------------------------------");
                                 runSearch();
                             });
 
