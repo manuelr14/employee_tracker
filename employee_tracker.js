@@ -226,16 +226,17 @@ function addEmployee() {
         connection.query("SELECT name, department_id from department",
             (err, results) => {
                 if (err) throw err;
-                console.log(results);
+                // console.log(results);
                 inquirer
                     .prompt([
                         {
                             name: "department",
-                            message: "Pick departmen by id to see employees",
+                            message: "Pick department by id to see employees",
                             type: "rawlist",
                             choices: function () {
+                                console.log("__________DEPARTMENTS___________");
                                 return results.map(item => {
-                                    console.log("id "+item.department_id + " -> " +item.name)
+                                    console.log("| id "+item.department_id + " -> " +item.name);
                                     return item.department_id 
                                      
                                 });
