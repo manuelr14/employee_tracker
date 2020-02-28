@@ -133,7 +133,7 @@ function addEmployee() {
                     }
                 }]).then(function (response1) {
 
-                    let query2 = "SELECT tittle FROM role"
+                    let query2 = "SELECT tittle , role_id FROM role"
 
                     connection.query(query2, (err, results1) => {
                         if (err) throw err;
@@ -148,9 +148,12 @@ function addEmployee() {
                                         return results1.map(item => {
                                             return item.tittle;
                                         });
+
                                     },
                                 }
                         ]).then(function (response2) {
+
+                               
                                     let query3 = "SELECT first_name FROM employee"
 
                                     connection.query(query3, (err, results2) => {
@@ -176,7 +179,30 @@ function addEmployee() {
                                                     var tittle = response2.tittle;
                                                     var manager = response3.manager;
                                                     console.log(name + " " + lastname + " " + department + " " + tittle + " " + manager);
+                                                   
+                                                    let query3 = `SELECT employee_id FROM employee WHERE first_name = '${response3.manager}'`
+                                                    connection.query(query3, (err, results3) => {
+                                                        if (err) throw err;
+                                                        console.log(results3); 
+                                                        
+                                                    });
+                                                        let query4 = `SELECT role_id FROM role WHERE tittle = '${response2.tittle}'`
+                                                        connection.query(query4, (err, response4) => {
+                                                            if (err) throw err;
+                                                            
+                                                            console.log(response4)
+                                                            
+                                                        });
+                                                            let query5 = `INSERT INTO employee ( first_name, last_name, manager_id) VALUES ('${response1.name}','${response1.last_name}',${response4},${results3})`
+                                                            connection.query(query5, (err, results5) => {
+                                                                if (err) throw err;
+                                                                console.log("employee added!"); 
+                                                                runSearch();
+                                                        });
+
+
                                                 });
+                                   
 
                                     });
                                 });
@@ -186,6 +212,7 @@ function addEmployee() {
 
         // });
     });
+
 };
 
 
@@ -196,7 +223,7 @@ function addEmployee() {
 
 
     function allEmployees_byDep() {
-        connection.query("SELECT name from department",
+        connection.query("SELECT name, department_id from department",
             (err, results) => {
                 if (err) throw err;
                 console.log(results);
@@ -204,22 +231,24 @@ function addEmployee() {
                     .prompt([
                         {
                             name: "department",
-                            message: "which department's employee would you like to see?",
+                            message: "Pick departmen by id to see employees",
                             type: "rawlist",
                             choices: function () {
                                 return results.map(item => {
-                                    return item.name;
+                                    console.log("id "+item.department_id + " -> " +item.name)
+                                    return item.department_id 
+                                     
                                 });
                             },
                         },
                     ]).then(function (response) {
-                        connection.query("SELECT first_name, last_name from employee JOIN department ON ?",
-                            {
-                                name: response.department
-                            }, (err, results) => {
-                                if (err) throw err;
+                        // let query = `SELECT first_name, last_name FROM employee WHERE role_id IN (SELECT department.department_id= ${response.department} FROM department)`
+                        let query = `SELECT first_name, last_name FROM employee WHERE role_id = ${response.department}`
+                        
+                        connection.query(query, (err, results) => {       
+                        if (err) throw err;
                                 results.forEach(element => {
-                                    console.log('name: ' + element.first_name + ' || last name: ' + element.last_name);
+                                    console.log('name: ' + element.first_name + ' ' + element.last_name);
 
                                 });
                                 runSearch();
