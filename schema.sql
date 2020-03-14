@@ -17,7 +17,7 @@ USE employee_trackerDB;
  salary DECIMAL (12,4),
  department_id INT,
  PRIMARY KEY (role_id),
- FOREIGN KEY (role_id) REFERENCES department (department_id)
+ FOREIGN KEY (department_id) REFERENCES department (department_id)
  );
  
  
