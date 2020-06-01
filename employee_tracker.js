@@ -281,10 +281,6 @@ function allEmployees_byManager() {
     )
 };
 
-
-
-
-
 function updateRole() {
     connection.query("SELECT *  FROM employee",
         (err, results) => {
