@@ -339,7 +339,6 @@ function updateRole() {
 
     }
 
-
     function deleteEmployee() {
             connection.query("SELECT first_name, last_name, employee_id FROM employee",
                 (err, results) => {
