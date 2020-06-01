@@ -13,7 +13,7 @@ const connection =mysql.createConnection({
     user:"root",
 
     password:"18877MSca",
-    database: "employee_trackerDB"
+    database:"employee_trackerDB"
 });
 
 connection.connect(function (err) {
