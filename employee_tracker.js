@@ -10,7 +10,7 @@ const connection =mysql.createConnection({
     port:3306,
 
 
-    user: "root",
+    user:"root",
 
     password: "18877MSca",
     database: "employee_trackerDB"
