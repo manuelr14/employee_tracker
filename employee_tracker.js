@@ -93,8 +93,6 @@ function allEmployees() {
 
 function addEmployee() {
 
-
-
     //    let query1 = " SELECT DISTINCT employee_id, first_name, last_name, role.role_id, role.tittle, role.salary, department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
     //    let query1 = " SELECT DISTINCT employee_id, first_name,  role.tittle,  department.name FROM employee JOIN role ON employee.role_id = role.role_id JOIN department ON role.role_id = department.department_id"
     let query1 = "SELECT * FROM department"
