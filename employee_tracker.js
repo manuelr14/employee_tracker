@@ -200,13 +200,6 @@ function addEmployee() {
 
 };
 
-
-
-
-
-
-
-
 function allEmployees_byDep() {
     connection.query("SELECT name, department_id from department",
         (err, results) => {
