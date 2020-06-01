@@ -8,9 +8,9 @@ When the user navigates to the console , the first command they need to run for 
 
 first it will be asked with what would the user like to do giving an list of options, for ths example we are going to add an employee
 
-![](image/asset/photo1.png)
-![](image/asset/photo2.png)
-![](image/asset/photo3.png)
+![](assets/images/photo1.png)
+![](assets/images/photo2.png)
+![](assets/images/photo3.png)
 
 As a business owner
 I want to be able to view and manage the departments, roles, and employees in my company
